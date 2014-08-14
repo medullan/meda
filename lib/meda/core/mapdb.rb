@@ -25,6 +25,11 @@ module MapDB
       return nil if stored.nil?
       Marshal.load String.from_java_bytes(stored)
     end
+    
+    def remove(key)
+      @tree.delete(key)
+      @mapdb.commit()
+    end
 
     def each
       @tree.each_pair { |key,value| yield(key, Marshal.load(String.from_java_bytes(value))) }
@@ -68,9 +73,9 @@ module MapDB
         @mapdb = Java::OrgMapdb::DBMaker.
           newFileDB(Java::JavaIo::File.new("#{path}")).
           closeOnJvmShutdown().
- #         transactionDisable(). was throwing an error on windows
+          transactionDisable().
           mmapFileEnable().
- #         asyncWriteEnable(). commented out because it was throughing an error 
+          asyncWriteEnable().
           make()
       end
     end
@@ -82,4 +87,3 @@ module MapDB
     def_delegators :@mapdb, :close, :closed?, :compact
   end
 end
-

@@ -49,6 +49,21 @@ module Meda
           profile = dataset.get_profile(profile_id)
         end
       end
+      
+      def survey(params, request)
+        process_request(params) do |dataset, survey_params|
+             if request.get?
+                #if request is get, return survey
+                dataset.return_survey(survey_params[:id])  
+             elsif request.delete? 
+               #if request is delete, remove survey
+                dataset.remove_survey(survey_params[:id])
+             else
+               #if request is post, create/modify survey
+                dataset.set_survey(survey_params)
+             end
+        end
+      end
 
       def track(params)
         params = get_user_id_for_logged_in_user(params)
@@ -134,4 +149,3 @@ module Meda
     end
   end
 end
-

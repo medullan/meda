@@ -68,6 +68,22 @@ module Meda
     def set_profile(profile_id, profile_info)
       store.set_profile(profile_id, profile_info)
     end
+    
+    #Adds a new survey or updates an existing survey
+    def set_survey(survey_info)
+      surveyStore.set_survey(survey_info)
+    end
+    
+    #returns surveys
+    def return_survey(survey_id)
+      survey=surveyStore.get_survey(survey_id)
+      return survey
+    end
+    
+    #removes an existing survey
+    def remove_survey(survey_id)
+      surveyStore.delete_survey(survey_id)
+    end
 
     def get_profile(profile_id)
       store.get_profile_by_id(profile_id)
@@ -83,7 +99,7 @@ module Meda
         # create the data directory if it does not exist
         @data_paths[directory] = FileUtils.mkdir_p(directory)
       end
-      filename = "#{hit.hour}-#{self.data_uuid}.json".gsub(':', '-')  #Replace : with - because can't save files with : on windows
+      filename = "#{hit.hour}-#{self.data_uuid}.json"
       path = File.join(directory, filename)
       begin
         File.open(path, 'a') do |f|
@@ -145,6 +161,15 @@ module Meda
       end
       @profile_store
     end
+    
+    def surveyStore
+      if @survey_store.nil?
+        FileUtils.mkdir_p(meda_config.mapdb_path)
+        mapdb_path = File.join(meda_config.mapdb_path, path_name)
+        @survey_store = Meda::SurveyStore.new(mapdb_path)
+      end
+      @survey_store
+    end
 
     protected
 
@@ -154,4 +179,3 @@ module Meda
 
   end
 end
-
