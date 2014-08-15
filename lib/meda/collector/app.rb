@@ -38,7 +38,7 @@ module Meda
       # @overload post "/identify.json"
       # Identifies the user, and returns a meda profile_id
       post '/identify.json', :provides => :json do
-        identify_data = raw_json_from_request
+        identify_data = json_from_request
         print_out_params(identify_data)
         profile = settings.connection.identify(identify_data)
         if profile
@@ -129,7 +129,7 @@ module Meda
       # Record a pageview
       post '/page.json', :provides => :json do
         page_data = json_from_request
-        print_out_params(page_data) 
+        print_out_params(page_data)
         if valid_hit_request?(page_data)
           settings.connection.page(page_data)
           respond_with_ok
@@ -142,9 +142,9 @@ module Meda
       # @overload get "/page.gif"
       # Record a pageview
       get '/page.gif' do
-        get_profile_id_from_cookie
         if valid_hit_request?(params)
           print_out_params(params)
+          get_profile_id_from_cookie
           settings.connection.page(request_environment.merge(params))
           respond_with_pixel
         else
@@ -170,15 +170,43 @@ module Meda
       # @overload get "/track.gif"
       # Record an event
       get '/track.gif' do
-        get_profile_id_from_cookie
         if valid_hit_request?(params)
+          print_out_params(params)
+          get_profile_id_from_cookie
           settings.connection.track(request_environment.merge(params))
           respond_with_pixel
         else
           respond_with_bad_request
         end
       end
-
+      
+      # Creates and updates survey data
+      post '/survey.json', :provides => :json do
+        survey_data = json_from_request
+        settings.connection.survey(survey_data, request)
+        respond_with_ok
+      end
+      
+      # Returns surveys
+      get '/survey.json', :provides => :json do
+        survey_data=params
+        survey=settings.connection.survey(survey_data, request)
+        
+        if survey
+          json(survey)
+        else
+          respond_with_bad_request
+        end
+      end
+      
+      # deletes survey data
+      delete '/survey.json', :provides => :json do
+        survey_data = json_from_request
+        settings.connection.survey(survey_data, request)
+        respond_with_ok
+      end
+      
+      
       # Config
 
       configure do
@@ -236,7 +264,6 @@ module Meda
         ActiveSupport::HashWithIndifferentAccess.new({
           :user_ip => remote_ip,
           :referrer => request.referrer,
-          :user_language => request.env['HTTP_ACCEPT_LANGUAGE'],
           :user_agent => request.user_agent
         })
       end
@@ -287,4 +314,3 @@ module Meda
 
   end
 end
-
