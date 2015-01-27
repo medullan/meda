@@ -32,7 +32,7 @@ module Meda
       startBenchmark = Time.now.to_f
       @store.encode(key,value)
       endBenchmark = Time.now.to_f
-      Meda.logger.debug("ending encode in #{endBenchmark-startBenchmark}ms")
+      Meda.logger.debug("ending encode in #{diff_in_ms(startBenchmark,endBenchmark)}ms")
     end
 
     def key?(key)
@@ -40,7 +40,7 @@ module Meda
       startBenchmark = Time.now.to_f
       result = @store.key?(key)
       endBenchmark = Time.now.to_f
-      Meda.logger.debug("ending key check  #{endBenchmark-startBenchmark}ms")
+      Meda.logger.debug("ending key check  #{diff_in_ms(startBenchmark,endBenchmark)}ms")
       Meda.logger.debug("result #{result}")
       return result
     end
@@ -50,7 +50,7 @@ module Meda
       startBenchmark = Time.now.to_f
       result = @store.decode(key)
       endBenchmark = Time.now.to_f
-      Meda.logger.debug("ending decode #{endBenchmark-startBenchmark}ms")
+      Meda.logger.debug("ending decode #{diff_in_ms(startBenchmark,endBenchmark)}ms")
       return result
     end
 
@@ -60,7 +60,11 @@ module Meda
       startBenchmark = Time.now.to_f
       @store.delete(key)
       endBenchmark = Time.now.to_f
-      Meda.logger.debug("ending delete in  #{endBenchmark-startBenchmark}ms")
+      Meda.logger.debug("ending delete in  #{diff_in_ms(startBenchmark,endBenchmark)}ms")
+    end
+
+    def diff_in_ms(startValue,endValue)
+      diff = (endValue - startValue) * 1000
     end
   end
 end
