@@ -62,7 +62,7 @@ describe "Collector Application" do
     context 'when the browser is Safari' do
       it 'should set the Etag header with the client_id and profile_id' do
         params = {'dataset' => token, 'member_id' => member_id}
-        get '/meda/identify.gif', params, { "HTTP_USER_AGENT" => "Safari" }
+        get '/meda/identify.gif', params, { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/601.4.4 (KHTML, like Gecko) Version/9.0.3 Safari/601.4.4" }
         expect(last_response).to be_ok
         expect(last_response.header["ETag"]).to include("client_id")
         expect(last_response.header["ETag"]).to include("profile_id")
@@ -73,7 +73,7 @@ describe "Collector Application" do
     context 'when the browser is not Safari' do
       it 'should not set the Etag header with client_id and profile_id' do
         params = {'dataset' => token, 'member_id' => member_id}
-        get '/meda/identify.gif', params, { "HTTP_USER_AGENT" => "Chrome" }
+        get '/meda/identify.gif', params, { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36" }
         expect(last_response).to be_ok
         expect(last_response.header["ETag"]).to eql(nil)
         expect(last_response.header['Set-Cookie'].include?("__collector_client_id")).to be_eql(true)
@@ -85,7 +85,7 @@ describe "Collector Application" do
     context 'when the browser is Safari' do
       it 'should set the Etag header with the client_id and profile_id' do
         params = {'dataset' => token, 'profile_id' => '123'}
-        get '/meda/profile.gif', params, { "HTTP_USER_AGENT" => "Safari" }
+        get '/meda/profile.gif', params, { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/601.4.4 (KHTML, like Gecko) Version/9.0.3 Safari/601.4.4" }
         expect(last_response).to be_ok
         expect(last_response.header["ETag"]).to include("client_id")
         expect(last_response.header["ETag"]).to include("profile_id")
@@ -96,7 +96,7 @@ describe "Collector Application" do
     context 'when the browser is not Safari' do
       it 'should not set the Etag header with client_id and profile_id' do
         params = {'dataset' => token, 'profile_id' => '123'}
-        get '/meda/profile.gif', params, { "HTTP_USER_AGENT" => "Chrome" }
+        get '/meda/profile.gif', params, { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36" }
         expect(last_response).to be_ok
         expect(last_response.header["ETag"]).to eql(nil)
         expect(last_response.header['Set-Cookie'].include?("__collector_client_id")).to be_eql(true)
@@ -112,7 +112,7 @@ describe "Collector Application" do
                   'path' => 'index.html',
                   'title' => 'Test',
                   'client_id' => '484138aa-232e-4e0e-8fe7-b438539e9e81'}
-        get '/meda/track.gif', params, { "HTTP_USER_AGENT" => "Safari" }
+        get '/meda/track.gif', params, { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/601.4.4 (KHTML, like Gecko) Version/9.0.3 Safari/601.4.4" }
         expect(last_response).to be_ok
         expect(last_response.header["ETag"]).to include("client_id")
         expect(last_response.header["ETag"]).to include("profile_id")
@@ -128,7 +128,7 @@ describe "Collector Application" do
                   'title' => 'Test',
                   'client_id' => '484138aa-232e-4e0e-8fe7-b438539e9e81'}
 
-        get '/meda/track.gif', params, { "HTTP_USER_AGENT" => "Chrome" }
+        get '/meda/track.gif', params, { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36" }
         expect(last_response).to be_ok
         expect(last_response.header["ETag"]).to eql(nil)
         expect(last_response.header['Set-Cookie'].include?("__collector_client_id")).to be_eql(true)
@@ -343,7 +343,7 @@ describe "Collector Application" do
 
     context 'when the browser is Safari' do
       it 'should set the Etag header with the client_id and profile_id' do
-        get request_path + '&profile_id=123', {}, { "HTTP_USER_AGENT" => "Safari" }
+        get request_path + '&profile_id=123', {}, { "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/601.4.4 (KHTML, like Gecko) Version/9.0.3 Safari/601.4.4" }
         #app.settings.connection.join_threads
         expect(dataset.last_hit.props[:path]).to eq('/web/guest/myblue?p_p_id=58&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_58_struts_action=%2Flogin%2Fcreate_account')
         expect(last_response.header['Set-Cookie'].include?("__collector_client_id")).to be_eql(true)
