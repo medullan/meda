@@ -2,6 +2,7 @@ require 'rack/utils'
 
 module Rack
   module Utils
+    # Overrides Rack's `set_cookie_header` to add support for `SameSite=None` on response cookies.
     def self.set_cookie_header!(header, key, value)
       case value
       when Hash
