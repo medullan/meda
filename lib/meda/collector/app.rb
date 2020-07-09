@@ -771,7 +771,8 @@ module Meda
       end
 
       def set_profile_id_in_cookie(id)
-        cookies[:'_meda_profile_id'] = id
+        # cookies[:'_meda_profile_id'] = id
+        response.set_cookie :_meda_profile_id, {:value => id, :domain => request.host, :path => '/', :httponly => true, :secure => true, :same_site => "None"}
       end
 
       def get_profile_id_from_cookie
@@ -780,7 +781,7 @@ module Meda
 
       def set_client_id_cookie(client_id)
         @@logging_meta_data_service.add_to_mdc("new__collector_client_id", client_id)
-        response.set_cookie :__collector_client_id, {:value => client_id, :max_age => "31536000"}
+        response.set_cookie :__collector_client_id, {:value => client_id, :max_age => "31536000", :secure => true, :same_site => "None"}
       end
 
       def get_client_id_from_cookie
@@ -871,6 +872,8 @@ module Meda
       def logger
         Meda.logger || Logger.new(STDOUT)
       end
+
+      require 'meda/initializers/override_rack_set_cookie_header'
     end
 
   end
